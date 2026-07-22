@@ -442,26 +442,6 @@ h2 {
   gap: 0.5rem 1.5rem;
 }
 
-.project__link {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  text-decoration: none;
-}
-
-.project__link:hover {
-  color: var(--accent);
-}
-
-.project__link .link-arrow {
-  display: inline-block;
-  transition: transform 120ms ease;
-}
-
-.project__link:hover .link-arrow {
-  transform: translateX(3px);
-}
-
 @media (max-width: 48rem) {
   .project {
     grid-template-columns: 1fr;

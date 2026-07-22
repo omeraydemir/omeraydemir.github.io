@@ -225,6 +225,16 @@
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 
+  /* Kullanıcı sistemden farklı bir tema seçtiğinde tarayıcı çubuğu rengi de
+     seçilen temayı izlesin; medya koşullu metalar aynı değere çekilir. */
+  function syncThemeColor() {
+    if (!root.hasAttribute("data-theme")) return;
+    const color = currentTheme() === "dark" ? "#16181D" : "#FAF9F7";
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute("content", color);
+    });
+  }
+
   /* Kontrollerin erişilebilir adları hem durumu hem hedefi bildirir ve
      dil değişiminde birlikte güncellenir. */
   function updateControlLabels() {
@@ -260,6 +270,7 @@
       const next = currentTheme() === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       store("theme", next);
+      syncThemeColor();
       updateControlLabels();
     });
   }
@@ -320,5 +331,6 @@
     });
   }
 
+  syncThemeColor();
   applyI18n();
 })();
