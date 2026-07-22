@@ -1,4 +1,4 @@
-/* Faz 4: dil, tema ve mobil menü kontrolleri.
+/* Dil, görünüm modu ve renk paleti kontrolleri.
    TR/EN metinlerinin tek kaynağı content/site-content.md; anahtarlar
    oradaki tabloların anahtarlarıyla birebir eşleşir. */
 (() => {
@@ -14,10 +14,19 @@
       "skip.content": "Ana içeriğe geç",
       "language.current": "Geçerli dil: Türkçe",
       "language.switchTo": "İngilizceye geç",
-      "theme.toLight": "Aydınlık temaya geç",
-      "theme.toDark": "Karanlık temaya geç",
-      "theme.current.light": "Geçerli tema: aydınlık",
-      "theme.current.dark": "Geçerli tema: karanlık",
+      "mode.current.auto": "Görünüm: otomatik (sistem)",
+      "mode.current.light": "Görünüm: açık",
+      "mode.current.dark": "Görünüm: koyu",
+      "mode.toAuto": "Otomatik görünüme geç",
+      "mode.toLight": "Açık görünüme geç",
+      "mode.toDark": "Koyu görünüme geç",
+      "palette.label": "Renk paleti",
+      "palette.current": "Tema",
+      "palette.choose": "Renk paleti seç",
+      "palette.ember": "Ember",
+      "palette.ocean": "Ocean",
+      "palette.forest": "Forest",
+      "palette.plum": "Plum",
       "identity.role": "Mobil ve Full-Stack Geliştirici",
       "hero.eyebrow": "Merhaba, ben Ömer.",
       "hero.title": "Mobil uygulamalar geliştiriyor ve iyileştiriyorum.",
@@ -87,10 +96,19 @@
       "skip.content": "Skip to main content",
       "language.current": "Current language: English",
       "language.switchTo": "Switch to Turkish",
-      "theme.toLight": "Switch to light theme",
-      "theme.toDark": "Switch to dark theme",
-      "theme.current.light": "Current theme: light",
-      "theme.current.dark": "Current theme: dark",
+      "mode.current.auto": "Appearance: automatic (system)",
+      "mode.current.light": "Appearance: light",
+      "mode.current.dark": "Appearance: dark",
+      "mode.toAuto": "Switch to automatic appearance",
+      "mode.toLight": "Switch to light appearance",
+      "mode.toDark": "Switch to dark appearance",
+      "palette.label": "Color palette",
+      "palette.current": "Theme",
+      "palette.choose": "Choose a color palette",
+      "palette.ember": "Ember",
+      "palette.ocean": "Ocean",
+      "palette.forest": "Forest",
+      "palette.plum": "Plum",
       "identity.role": "Mobile & Full-Stack Developer",
       "hero.eyebrow": "Hi, I’m Ömer.",
       "hero.title": "I build and improve mobile applications.",
@@ -156,7 +174,10 @@
   };
 
   const langBtn = document.querySelector("[data-lang-toggle]");
+  const modeBtn = document.querySelector("[data-mode-toggle]");
   const themeBtn = document.querySelector("[data-theme-toggle]");
+  const themeMenu = document.querySelector("[data-theme-menu]");
+  const themeOptions = themeMenu ? Array.from(themeMenu.querySelectorAll(".theme-option")) : [];
 
   function readStored(key) {
     try {
@@ -201,19 +222,28 @@
     updateControlLabels();
   }
 
-  /* ---------- Tema ---------- */
+  /* ---------- Tema: görünüm modu + renk paleti ----------
+     İki eksen bağımsız: mod auto/light/dark, palet ember/ocean/forest/plum.
+     İkisi de HTML özniteliğine yazılır, renk kararını CSS verir. */
 
-  function currentTheme() {
-    const chosen = root.getAttribute("data-theme");
-    if (chosen === "dark" || chosen === "light") return chosen;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  const MODES = ["auto", "light", "dark"];
+  const PALETTES = ["ember", "ocean", "forest", "plum"];
+
+  function currentMode() {
+    const chosen = root.getAttribute("data-mode");
+    return MODES.includes(chosen) ? chosen : "auto";
   }
 
-  /* Kullanıcı sistemden farklı bir tema seçtiğinde tarayıcı çubuğu rengi de
-     seçilen temayı izlesin; medya koşullu metalar aynı değere çekilir. */
+  function currentPalette() {
+    const chosen = root.getAttribute("data-palette");
+    return PALETTES.includes(chosen) ? chosen : PALETTES[0];
+  }
+
+  /* Tarayıcı çubuğu rengi seçili tema + paleti izlesin. Değer CSS'ten
+     okunur; böylece yeni palet eklemek bu fonksiyonu değiştirmez. */
   function syncThemeColor() {
-    if (!root.hasAttribute("data-theme")) return;
-    const color = currentTheme() === "dark" ? "#16181D" : "#FAF9F7";
+    const color = getComputedStyle(root).getPropertyValue("--background").trim();
+    if (!color) return;
     document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
       meta.setAttribute("content", color);
     });
@@ -228,12 +258,15 @@
       const label = langBtn.querySelector("[data-lang-label]");
       if (label) label.textContent = lang.toUpperCase();
     }
+    if (modeBtn) {
+      const mode = currentMode();
+      const next = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+      const toKey = { auto: "mode.toAuto", light: "mode.toLight", dark: "mode.toDark" };
+      modeBtn.setAttribute("aria-label", dict["mode.current." + mode] + ". " + dict[toKey[next]]);
+    }
     if (themeBtn) {
-      const dark = currentTheme() === "dark";
-      themeBtn.setAttribute(
-        "aria-label",
-        dict[dark ? "theme.current.dark" : "theme.current.light"] + ". " + dict[dark ? "theme.toLight" : "theme.toDark"]
-      );
+      const name = dict["palette." + currentPalette()];
+      themeBtn.setAttribute("aria-label", dict["palette.current"] + ": " + name + ". " + dict["palette.choose"]);
     }
   }
 
@@ -245,15 +278,83 @@
     });
   }
 
-  if (themeBtn) {
-    themeBtn.addEventListener("click", () => {
-      const next = currentTheme() === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
+  /* Mod düğmesi üç durum arasında döner: otomatik → açık → koyu. */
+  if (modeBtn) {
+    modeBtn.addEventListener("click", () => {
+      const next = MODES[(MODES.indexOf(currentMode()) + 1) % MODES.length];
+      root.setAttribute("data-mode", next);
       store("theme", next);
       syncThemeColor();
       updateControlLabels();
     });
   }
+
+  /* ---------- Palet seçici (düğme + popover liste) ---------- */
+
+  if (themeBtn && themeMenu && themeOptions.length) {
+    /* Kayıtlı palet zaten head'deki inline script tarafından uygulandı.
+       Seçili satır işaretlenir ve tek tab durağı olur; ok tuşlarıyla
+       odak listenin içinde gezer (roving tabindex). */
+    const markSelected = () => {
+      const active = currentPalette();
+      themeOptions.forEach((option) => {
+        const selected = option.dataset.palette === active;
+        option.setAttribute("aria-selected", String(selected));
+        option.tabIndex = selected ? 0 : -1;
+      });
+    };
+
+    const setMenu = (open) => {
+      themeMenu.hidden = !open;
+      themeBtn.setAttribute("aria-expanded", String(open));
+      if (open) themeOptions.find((o) => o.tabIndex === 0)?.focus();
+    };
+
+    const closeMenu = ({ refocus }) => {
+      if (themeMenu.hidden) return;
+      setMenu(false);
+      if (refocus) themeBtn.focus();
+    };
+
+    markSelected();
+
+    themeBtn.addEventListener("click", () => setMenu(themeMenu.hidden));
+
+    themeOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        root.setAttribute("data-palette", option.dataset.palette);
+        store("palette", option.dataset.palette);
+        markSelected();
+        syncThemeColor();
+        updateControlLabels();
+        closeMenu({ refocus: true });
+      });
+    });
+
+    /* Ok tuşları odağı taşır, seçimi değiştirmez; Enter ve Space
+       düğmelerin kendi davranışıyla satırı seçer. */
+    themeMenu.addEventListener("keydown", (event) => {
+      const step = { ArrowDown: 1, ArrowUp: -1 }[event.key];
+      if (!step) return;
+      event.preventDefault();
+      const from = themeOptions.indexOf(document.activeElement);
+      const next = (from + step + themeOptions.length) % themeOptions.length;
+      themeOptions[next].focus();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu({ refocus: true });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".theme-picker")) closeMenu({ refocus: false });
+    });
+  }
+
+  /* Otomatik modda sistem teması değişirse tarayıcı çubuğu da izlesin. */
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (currentMode() === "auto") syncThemeColor();
+  });
 
   syncThemeColor();
   applyI18n();
