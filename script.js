@@ -12,19 +12,12 @@
       "metadata.description":
         "Mobil ve Full-Stack geliştirici Ömer Aydemir’in .NET MAUI, C#, REST API ve platformlar arası mobil uygulama çalışmalarını içeren portföyü.",
       "skip.content": "Ana içeriğe geç",
-      "nav.label": "Ana navigasyon",
-      "nav.about": "Hakkımda",
-      "nav.experience": "Deneyim",
-      "nav.work": "Çalışmalar",
-      "nav.contact": "İletişim",
       "language.current": "Geçerli dil: Türkçe",
       "language.switchTo": "İngilizceye geç",
       "theme.toLight": "Aydınlık temaya geç",
       "theme.toDark": "Karanlık temaya geç",
       "theme.current.light": "Geçerli tema: aydınlık",
       "theme.current.dark": "Geçerli tema: karanlık",
-      "menu.open": "Menüyü aç",
-      "menu.close": "Menüyü kapat",
       "identity.role": "Mobil ve Full-Stack Geliştirici",
       "hero.eyebrow": "Merhaba, ben Ömer.",
       "hero.title": "Mobil uygulamalar geliştiriyor ve iyileştiriyorum.",
@@ -92,19 +85,12 @@
       "metadata.description":
         "The portfolio of Ömer Aydemir, a Mobile & Full-Stack Developer working with .NET MAUI, C#, REST APIs and cross-platform mobile applications.",
       "skip.content": "Skip to main content",
-      "nav.label": "Primary navigation",
-      "nav.about": "About",
-      "nav.experience": "Experience",
-      "nav.work": "Work",
-      "nav.contact": "Contact",
       "language.current": "Current language: English",
       "language.switchTo": "Switch to Turkish",
       "theme.toLight": "Switch to light theme",
       "theme.toDark": "Switch to dark theme",
       "theme.current.light": "Current theme: light",
       "theme.current.dark": "Current theme: dark",
-      "menu.open": "Open menu",
-      "menu.close": "Close menu",
       "identity.role": "Mobile & Full-Stack Developer",
       "hero.eyebrow": "Hi, I’m Ömer.",
       "hero.title": "I build and improve mobile applications.",
@@ -171,8 +157,6 @@
 
   const langBtn = document.querySelector("[data-lang-toggle]");
   const themeBtn = document.querySelector("[data-theme-toggle]");
-  const menuBtn = document.querySelector("[data-menu-toggle]");
-  const nav = document.getElementById("site-nav");
 
   function readStored(key) {
     try {
@@ -251,10 +235,6 @@
         dict[dark ? "theme.current.dark" : "theme.current.light"] + ". " + dict[dark ? "theme.toLight" : "theme.toDark"]
       );
     }
-    if (menuBtn) {
-      const open = menuBtn.getAttribute("aria-expanded") === "true";
-      menuBtn.setAttribute("aria-label", dict[open ? "menu.close" : "menu.open"]);
-    }
   }
 
   if (langBtn) {
@@ -272,62 +252,6 @@
       store("theme", next);
       syncThemeColor();
       updateControlLabels();
-    });
-  }
-
-  /* ---------- Mobil menü ---------- */
-
-  if (menuBtn && nav) {
-    menuBtn.hidden = false;
-
-    const setMenu = (open) => {
-      menuBtn.setAttribute("aria-expanded", String(open));
-      nav.classList.toggle("is-open", open);
-      updateControlLabels();
-    };
-
-    menuBtn.addEventListener("click", () => {
-      setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
-    });
-
-    nav.addEventListener("click", (event) => {
-      if (event.target.closest("a")) setMenu(false);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && menuBtn.getAttribute("aria-expanded") === "true") {
-        setMenu(false);
-        menuBtn.focus();
-      }
-    });
-  }
-
-  /* ---------- Aktif bölüm (P1) ---------- */
-
-  const navLinks = Array.from(document.querySelectorAll('.site-nav a[href^="#"]'));
-
-  function setActiveSection(id) {
-    navLinks.forEach((link) => {
-      const active = link.hash.slice(1) === id;
-      link.classList.toggle("is-active", active);
-      if (active) link.setAttribute("aria-current", "true");
-      else link.removeAttribute("aria-current");
-    });
-  }
-
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      /* Bölüm, görünüm alanının ortasındaki banda girince aktif sayılır. */
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    navLinks.forEach((link) => {
-      const section = document.getElementById(link.hash.slice(1));
-      if (section) observer.observe(section);
     });
   }
 
