@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://omeraydemir.github.io/sitemap.xml

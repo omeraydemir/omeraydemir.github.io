@@ -1,0 +1,253 @@
+/* ============================================================
+   Design tokens — kaynak: content/design-spec.md (Faz 3 kararı)
+   Açık tema varsayılan; koyu tema hem sistem tercihiyle hem de
+   Faz 4'te eklenecek data-theme özniteliğiyle uygulanır.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+  --background: #faf9f7;
+  --surface: #f1efea;
+  --text-primary: #20242b;
+  --text-secondary: #535e6e;
+  --accent: #9a5b12;
+  --border: #dcd8d0;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --measure: 70ch; /* hedef: 65–75 karakter satır uzunluğu */
+  --content-width: 68rem;
+  --space-section: clamp(4.5rem, 12vh, 7.5rem);
+  --space-gutter: clamp(1.25rem, 5vw, 2.5rem);
+}
+
+/* Koyu tema tokenları iki seçicide tekrarlanır: data-theme (kullanıcı
+   seçimi, Faz 4) her zaman sistem tercihinin önüne geçer. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #16181d;
+  --surface: #1c1f26;
+  --text-primary: #e9e7e2;
+  --text-secondary: #a3acba;
+  --accent: #e3a44c;
+  --border: #31363f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --background: #16181d;
+    --surface: #1c1f26;
+    --text-primary: #e9e7e2;
+    --text-secondary: #a3acba;
+    --accent: #e3a44c;
+    --border: #31363f;
+  }
+}
+
+/* ============================================================
+   Taban
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  background: var(--background);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-thickness 120ms ease;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   Erişilebilirlik: skip link
+   ============================================================ */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10;
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: var(--background);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ============================================================
+   Yerleşim ritmi
+   ============================================================ */
+
+.container {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+
+.section p {
+  max-width: var(--measure);
+}
+
+/* ============================================================
+   Tipografi
+   ============================================================ */
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+}
+
+h2 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* İmza öğesi: bölüm başlığı üzerindeki kısa amber çizgi */
+.section-title::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-bottom: 0.9rem;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.hero-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   Header ve footer (temel; kontroller Faz 4'te)
+   ============================================================ */
+
+.site-header {
+  padding-block: 1.5rem;
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.site-footer {
+  padding-block: 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* ============================================================
+   Hareket azaltma
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
