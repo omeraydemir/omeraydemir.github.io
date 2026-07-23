@@ -792,6 +792,7 @@ h2 {
 }
 
 .site-footer {
+  display:none;
   padding-block: 2.5rem;
   border-top: 1px solid var(--border);
   color: var(--text-secondary);

@@ -85,10 +85,10 @@
       "contact.title": "İletişim",
       "contact.description":
         "Açık kaynak araçlar, özenle geliştirilmiş yazılımlar ve mobil geliştirme üzerine düşünce paylaşmaya her zaman açığım. Bana e-posta, GitHub veya LinkedIn üzerinden ulaşabilirsiniz.",
-      "contact.email": "E-posta gönder",
+      "contact.email": "E-posta",
       "contact.emailAria": "Ömer Aydemir’e e-posta gönder",
-      "contact.github": "GitHub üzerinden ulaş",
-      "contact.linkedin": "LinkedIn üzerinden ulaş",
+      "contact.github": "GitHub",
+      "contact.linkedin": "LinkedIn",
       "footer.note": "Ömer Aydemir tarafından tasarlandı ve geliştirildi.",
     },
     en: {
@@ -169,10 +169,10 @@
       "contact.title": "Contact",
       "contact.description":
         "I’m always open to exchanging ideas about open-source tools, thoughtfully built software and mobile development. You can reach me by email, GitHub or LinkedIn.",
-      "contact.email": "Send an email",
+      "contact.email": "E-mail",
       "contact.emailAria": "Send an email to Ömer Aydemir",
-      "contact.github": "Get in touch on GitHub",
-      "contact.linkedin": "Get in touch on LinkedIn",
+      "contact.github": "GitHub",
+      "contact.linkedin": "LinkedIn",
       "footer.note": "Designed and developed by Ömer Aydemir.",
     },
   };
