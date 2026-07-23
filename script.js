@@ -29,7 +29,9 @@
       "palette.plum": "Plum",
       "identity.role": "Mobil ve Full-Stack Geliştirici",
       "hero.eyebrow": "Merhaba, ben Ömer.",
-      "hero.title": "Mobil uygulamalar geliştiriyor ve iyileştiriyorum.",
+      "hero.titleBefore": "",
+      "hero.titleEmphasis": "Mobil uygulamalar",
+      "hero.titleAfter": " geliştiriyor ve iyileştiriyorum.",
       "hero.description":
         "2019’dan beri .NET, platformlar arası mobil teknolojiler ve bu uygulamaları destekleyen backend servisleri üzerinde çalışıyorum.",
       "social.github": "GitHub profilimi aç",
@@ -111,7 +113,9 @@
       "palette.plum": "Plum",
       "identity.role": "Mobile & Full-Stack Developer",
       "hero.eyebrow": "Hi, I’m Ömer.",
-      "hero.title": "I build and improve mobile applications.",
+      "hero.titleBefore": "I build and improve ",
+      "hero.titleEmphasis": "mobile applications",
+      "hero.titleAfter": ".",
       "hero.description":
         "Since 2019, I have worked with .NET, cross-platform mobile technologies and the backend services that support these applications.",
       "social.github": "Open my GitHub profile",
@@ -208,8 +212,8 @@
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.setAttribute("content", dict["metadata.description"]);
     document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const value = dict[el.dataset.i18n];
-      if (value) el.textContent = value;
+      const key = el.dataset.i18n;
+      if (key in dict) el.textContent = dict[key];
     });
     document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
       const value = dict[el.dataset.i18nAriaLabel];
